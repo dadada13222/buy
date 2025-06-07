@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Приватный Майнкрафт Сервер</title>
+    <style>
+        :root {
+            --bg-dark: #1a1a1a;
+            --text-dark: #ffffff;
+            --accent-dark: #00a8ff;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+            transition: all 0.3s ease;
+            background-image: linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px),
+                            linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .header {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            border-bottom: 2px solid var(--accent-dark);
+            padding-bottom: 10px;
+        }
+
+        .header.fade-out {
+            opacity: 0;
+            transform: translateY(-100px);
+        }
+
+        .header-text {
+            font-size: 36px;
+            margin: 0;
+            font-weight: 300;
+            color: var(--text-dark);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            letter-spacing: 1px;
+            line-height: 1.2;
+            border-right: 3px solid var(--accent-dark);
+            padding-right: 20px;
+        }
+
+        .server-name {
+            font-size: 32px;
+            margin: 0;
+            color: var(--accent-dark);
+            font-weight: 500;
+            margin-top: 8px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            letter-spacing: 2px;
+            position: relative;
+        }
+
+        .server-name::before {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--accent-dark);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .server-name:hover::before {
+            transform: scaleX(1);
+        }
+
+        .content {
+            min-height: 175vh;
+            padding-top: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 48%, var(--accent-dark) 49%, var(--accent-dark) 51%, transparent 52%);
+            background-size: 30px 30px;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+
+        .pass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-top: 80vh;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .pass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--accent-dark);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .pass-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .pass-card h2 {
+            margin: 0;
+            font-size: 40px;
+            color: var(--accent-dark);
+            font-weight: 500;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .pass-card h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            width: 60px;
+            height: 2px;
+            background: var(--accent-dark);
+            transform: translateX(-50%);
+            transition: width 0.3s ease;
+        }
+
+        .pass-card:hover h2::after {
+            width: 80px;
+        }
+
+        .pass-card p {
+            margin: 30px 0;
+            font-size: 30px;
+            font-weight: 300;
+            position: relative;
+        }
+
+        .pass-card p::before {
+            content: '•';
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent-dark);
+            font-size: 24px;
+        }
+
+        .buy-button {
+            background-color: var(--accent-dark);
+            color: var(--text-dark);
+            border: none;
+            padding: 20px 40px;
+            border-radius: 25px;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .buy-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+        }
+
+        .buy-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .buy-button:hover::before {
+            transform: translateX(100%);
+        }
+
+        .scroll-down {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            color: var(--accent-dark);
+            animation: bounce 2s infinite;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            opacity: 1;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .scroll-down.fade-out {
+            opacity: 0;
+            transform: translateX(-50%) translateY(100px);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-20px); }
+        }
+
+        .warning-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .warning-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .warning-content {
+            margin: auto;
+            background: var(--bg-dark);
+            color: var(--text-dark);
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .warning-content:hover {
+            transform: translateY(-5px);
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-dark);
+            transition: transform 0.3s ease;
+        }
+
+        .close-button:hover {
+            transform: rotate(90deg);
+        }
+
+        .warning-text {
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .continue-button {
+            display: block;
+            width: 200px;
+            margin: 20px auto 0;
+            padding: 12px 24px;
+            background-color: var(--accent-dark);
+            color: var(--text-dark);
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .continue-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .header-text {
+                font-size: 28px;
+            }
+
+            .server-name {
+                font-size: 24px;
+            }
+
+            .pass-card {
+                margin: 20px;
+                padding: 30px;
+            }
+
+            .pass-card h2 {
+                font-size: 32px;
+            }
+
+            .pass-card p {
+                font-size: 24px;
+            }
+
+            .scroll-down {
+                font-size: 18px;
+            }
+
+            .warning-content {
+                width: 95%;
+                padding: 20px;
+            }
+
+            .warning-text {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <p class="header-text">Приветствуем на приватном майнкрафт сервере</p>
+        <p class="server-name">Reallyurl</p>
+    </div>
+    
+    <div class="content">
+        <div class="pass-card">
+            <h2>Проходка</h2>
+            <p>2 рубля</p>
+            <button class="buy-button" onclick="showWarningModal()">Купить</button>
+        </div>
+        <div class="scroll-down">▼</div>
+    </div>
+
+    <div class="warning-modal" id="warningModal">
+        <div class="warning-content">
+            <button class="close-button" onclick="hideWarningModal()">&times;</button>
+            <p class="warning-text">При покупке в комментарии к покупке напишите свой никнейм в майнкрафте</p>
+            <button class="continue-button" onclick="continuePurchase()">Продолжить покупку</button>
+        </div>
+    </div>
+
+    <script>
+        function showWarningModal() {
+            const modal = document.getElementById('warningModal');
+            modal.classList.add('active');
+        }
+
+        function hideWarningModal() {
+            const modal = document.getElementById('warningModal');
+            modal.classList.remove('active');
+        }
+
+        function continuePurchase() {
+            hideWarningModal();
+            window.location.href = 'https://www.donationalerts.com/r/nodied';
+        }
+
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('.header');
+            const scrollDown = document.querySelector('.scroll-down');
+            const scrollPosition = window.scrollY;
+            
+            if (scrollPosition > 100) {
+                header.classList.add('fade-out');
+                scrollDown.classList.add('fade-out');
+            } else {
+                header.classList.remove('fade-out');
+                scrollDown.classList.remove('fade-out');
+            }
+        });
+    </script>
+</body>
+</html>
